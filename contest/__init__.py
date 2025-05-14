@@ -28,6 +28,10 @@ class Subsession(BaseSubsession):
         for group in self.get_groups():
             group.setup_round()
 
+    def determine_outcomes(self) -> None:
+        for group in self.get_groups():
+            group.determine_outcome()
+
 
 class Group(BaseGroup):
     prize = models.CurrencyField()
@@ -37,11 +41,22 @@ class Group(BaseGroup):
         for player in self.get_players():
             player.setup_round()
 
+    def determine_outcome(self) -> None:
+        total = sum(player.tickets_purchased for player in self.get_players())
+        for player in self.get_players():
+            player.prize_won = player.tickets_purchased / total
+            player.earnings = (
+                player.endowment + player.prize_won * self.prize -
+                player.cost_per_ticket * player.tickets_purchased
+            )
+
 
 class Player(BasePlayer):
     endowment = models.CurrencyField()
     cost_per_ticket = models.CurrencyField()
     tickets_purchased = models.IntegerField()
+    prize_won = models.FloatField()
+    earnings = models.CurrencyField()
 
     @property
     def coplayer(self) -> "Player":
@@ -74,6 +89,10 @@ class Decision(Page):
 
 class WaitForDecisions(WaitPage):
     wait_for_all_groups = True
+
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession) -> None:
+        subsession.determine_outcomes()
 
 
 class Results(Page):
