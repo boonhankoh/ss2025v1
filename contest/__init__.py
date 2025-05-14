@@ -43,6 +43,10 @@ class Player(BasePlayer):
     cost_per_ticket = models.CurrencyField()
     tickets_purchased = models.IntegerField()
 
+    @property
+    def coplayer(self) -> "Player":
+        return self.group.get_player_by_id(3 - self.id_in_group)
+
     def setup_round(self) -> None:
         self.endowment = C.ENDOWMENT
         self.cost_per_ticket = C.COST_PER_TICKET
