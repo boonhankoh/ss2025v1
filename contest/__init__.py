@@ -3,8 +3,10 @@ from otree.api import (
     BaseGroup,
     BasePlayer,
     BaseSubsession,
+    Currency,
     Page,
     WaitPage,
+    models,
 )
 
 doc = """
@@ -16,18 +18,34 @@ class C(BaseConstants):
     NAME_IN_URL = "contest"
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
+    ENDOWMENT = Currency(10)
+    PRIZE = Currency(10)
+    COST_PER_TICKET = Currency(1)
 
 
 class Subsession(BaseSubsession):
-    pass
+    def setup_round(self) -> None:
+        for group in self.get_groups():
+            group.setup_round()
 
 
 class Group(BaseGroup):
-    pass
+    prize = models.CurrencyField()
+
+    def setup_round(self) -> None:
+        self.prize = C.PRIZE
+        for player in self.get_players():
+            player.setup_round()
 
 
 class Player(BasePlayer):
-    pass
+    endowment = models.CurrencyField()
+    cost_per_ticket = models.CurrencyField()
+    tickets_purchased = models.IntegerField()
+
+    def setup_round(self) -> None:
+        self.endowment = C.ENDOWMENT
+        self.cost_per_ticket = C.COST_PER_TICKET
 
 
 # PAGES
@@ -40,9 +58,14 @@ class Intro(Page):
 class SetupRound(WaitPage):
     wait_for_all_groups = True
 
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession) -> None:
+        subsession.setup_round()
+
 
 class Decision(Page):
-    pass
+    form_model = "player"
+    form_fields = ["tickets_purchased"]
 
 
 class WaitForDecisions(WaitPage):
