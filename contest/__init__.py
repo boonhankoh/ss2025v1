@@ -25,9 +25,11 @@ class C(BaseConstants):
 
 class Subsession(BaseSubsession):
     is_paid = models.BooleanField()
+    csf = models.StringField(choices=["share", "allpay"])
 
     def setup_round(self) -> None:
         self.is_paid = self.round_number % 2 == 1
+        self.csf = "allpay"
         for group in self.get_groups():
             group.setup_round()
 
@@ -44,10 +46,27 @@ class Group(BaseGroup):
         for player in self.get_players():
             player.setup_round()
 
-    def determine_outcome(self) -> None:
+    def determine_outcome_share(self) -> None:
         total = sum(player.tickets_purchased for player in self.get_players())
         for player in self.get_players():
             player.prize_won = player.tickets_purchased / total
+
+    def determine_outcome_allpay(self) -> None:
+        max_tickets = max(player.tickets_purchased for player in self.get_players())
+        num_tied = len([player for player in self.get_players()
+                        if player.tickets_purchased == max_tickets])
+        for player in self.get_players():
+            if player.tickets_purchased == max_tickets:
+                player.prize_won = 1 / num_tied
+            else:
+                player.prize_won = 0
+
+    def determine_outcome(self) -> None:
+        if self.subsession.csf == "share":
+            self.determine_outcome_share()
+        elif self.subsession.csf == "allpay":
+            self.determine_outcome_allpay()
+        for player in self.get_players():
             player.earnings = (
                 player.endowment + player.prize_won * self.prize -
                 player.cost_per_ticket * player.tickets_purchased
