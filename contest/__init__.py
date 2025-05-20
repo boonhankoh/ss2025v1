@@ -1,3 +1,5 @@
+import random
+
 from otree.api import (
     BaseConstants,
     BaseGroup,
@@ -21,7 +23,7 @@ class C(BaseConstants):
 
 class Subsession(BaseSubsession):
     is_paid = models.BooleanField()
-    csf = models.StringField(choices=["share", "allpay"])
+    csf = models.StringField(choices=["share", "allpay", "lottery"])
 
     def setup_round(self) -> None:
         self.is_paid = self.round_number % 2 == 1
@@ -47,6 +49,15 @@ class Group(BaseGroup):
         for player in self.get_players():
             player.prize_won = player.tickets_purchased / total
 
+    def determine_outcome_lottery(self) -> None:
+        try:
+            winner = random.choices(self.get_players(),
+                                    weights=[p.tickets_purchased for p in self.get_players()])[0]
+        except ValueError:
+            winner = random.choice(self.get_players())
+        for player in self.get_players():
+            player.prize_won = 1 if player == winner else 0
+
     def determine_outcome_allpay(self) -> None:
         max_tickets = max(player.tickets_purchased for player in self.get_players())
         num_tied = len([player for player in self.get_players()
@@ -62,6 +73,8 @@ class Group(BaseGroup):
             self.determine_outcome_share()
         elif self.subsession.csf == "allpay":
             self.determine_outcome_allpay()
+        elif self.subsession.csf == "lottery":
+            self.determine_outcome_lottery()
         for player in self.get_players():
             player.earnings = (
                 player.endowment + player.prize_won * self.prize -

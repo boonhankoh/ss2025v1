@@ -24,6 +24,17 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
     ),
     dict(
+        name="lottery",
+        app_sequence=[
+            "contest",
+        ],
+        csf="lottery",
+        endowment=10,
+        prize=10,
+        cost_per_ticket=1,
+        num_demo_participants=2,
+    ),
+    dict(
         name="splash_demo",
         app_sequence=["splash"],
         num_demo_participants=3,
