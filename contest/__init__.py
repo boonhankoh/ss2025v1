@@ -86,6 +86,18 @@ class Decision(Page):
     form_model = "player"
     form_fields = ["tickets_purchased"]
 
+    @staticmethod
+    def error_message(player: Player, values: dict) -> str | None:
+        if values["tickets_purchased"] < 0:
+            return "You cannot buy a negative number of tickets."
+        if values["tickets_purchased"] > player.endowment // player.cost_per_ticket:
+            return (
+                f"Buying {values['tickets_purchased']} tickets would cost "
+                f"{values['tickets_purchased'] * player.cost_per_ticket}, "
+                f"which is more than your endowment of {player.endowment}."
+            )
+        return None
+
 
 class WaitForDecisions(WaitPage):
     wait_for_all_groups = True
