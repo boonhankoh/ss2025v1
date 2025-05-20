@@ -29,6 +29,8 @@ class Subsession(BaseSubsession):
         if self.round_number == 1:
             self.setup_paid_rounds()
         self.csf = self.session.config["csf"]
+        if self.session.config.get("random_regrouping", False):
+            self.group_randomly()
         for group in self.get_groups():
             group.setup_round()
 

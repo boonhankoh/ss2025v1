@@ -56,6 +56,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     participation_fee=0.00,
     doc="",
     num_paid_rounds=2,
+    random_regrouping=True,
 )
 
 PARTICIPANT_FIELDS = []
