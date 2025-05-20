@@ -17,14 +17,17 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = "contest"
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 3
     ENDOWMENT = Currency(10)
     PRIZE = Currency(10)
     COST_PER_TICKET = Currency(1)
 
 
 class Subsession(BaseSubsession):
+    is_paid = models.BooleanField()
+
     def setup_round(self) -> None:
+        self.is_paid = self.round_number % 2 == 1
         for group in self.get_groups():
             group.setup_round()
 
@@ -49,6 +52,8 @@ class Group(BaseGroup):
                 player.endowment + player.prize_won * self.prize -
                 player.cost_per_ticket * player.tickets_purchased
             )
+            if self.subsession.is_paid:
+                player.payoff = player.earnings
 
 
 class Player(BasePlayer):
@@ -61,6 +66,10 @@ class Player(BasePlayer):
     @property
     def coplayer(self) -> "Player":
         return self.group.get_player_by_id(3 - self.id_in_group)
+
+    @property
+    def paid_rounds(self) -> list["Player"]:
+        return [r for r in self.in_all_rounds() if r.subsession.is_paid]
 
     def setup_round(self) -> None:
         self.endowment = C.ENDOWMENT

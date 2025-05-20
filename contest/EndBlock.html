@@ -3,6 +3,19 @@
 {{ endblock }}
 {{ block content }}
 
+<p>
+    Here are your results from the paid rounds:
+</p>
+
+{{ for rd in player.paid_rounds }}
+    <p>
+        {{ rd.round_number }}: Purchased {{ rd.tickets_purchased }} tickets, won {{ rd.prize_won }}, earnings {{ rd.payoff }}.
+    </p>
+{{ endfor }}
+
+<p>
+    Your total earnings for the experiment so far are {{ player.participant.payoff }}.
+</p>
     {{ next_button }}
 
 {{ endblock }}
