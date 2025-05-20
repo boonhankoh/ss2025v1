@@ -22,14 +22,20 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    is_paid = models.BooleanField()
+    is_paid = models.BooleanField(initial=False)
     csf = models.StringField(choices=["share", "allpay", "lottery"])
 
     def setup_round(self) -> None:
-        self.is_paid = self.round_number % 2 == 1
+        if self.round_number == 1:
+            self.setup_paid_rounds()
         self.csf = self.session.config["csf"]
         for group in self.get_groups():
             group.setup_round()
+
+    def setup_paid_rounds(self) -> None:
+        for rd in random.choices(self.in_rounds(1, C.NUM_ROUNDS),
+                                 k=self.session.config["num_paid_rounds"]):
+            rd.is_paid = True
 
     def determine_outcomes(self) -> None:
         for group in self.get_groups():
