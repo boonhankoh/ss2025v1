@@ -3,7 +3,6 @@ from otree.api import (
     BaseGroup,
     BasePlayer,
     BaseSubsession,
-    Currency,
     Page,
     WaitPage,
     models,
@@ -18,9 +17,6 @@ class C(BaseConstants):
     NAME_IN_URL = "contest"
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 3
-    ENDOWMENT = Currency(10)
-    PRIZE = Currency(10)
-    COST_PER_TICKET = Currency(1)
 
 
 class Subsession(BaseSubsession):
@@ -29,7 +25,7 @@ class Subsession(BaseSubsession):
 
     def setup_round(self) -> None:
         self.is_paid = self.round_number % 2 == 1
-        self.csf = "allpay"
+        self.csf = self.session.config["csf"]
         for group in self.get_groups():
             group.setup_round()
 
@@ -42,7 +38,7 @@ class Group(BaseGroup):
     prize = models.CurrencyField()
 
     def setup_round(self) -> None:
-        self.prize = C.PRIZE
+        self.prize = self.session.config["prize"]
         for player in self.get_players():
             player.setup_round()
 
@@ -91,8 +87,8 @@ class Player(BasePlayer):
         return [r for r in self.in_all_rounds() if r.subsession.is_paid]
 
     def setup_round(self) -> None:
-        self.endowment = C.ENDOWMENT
-        self.cost_per_ticket = C.COST_PER_TICKET
+        self.endowment = self.session.config["endowment"]
+        self.cost_per_ticket = self.session.config["cost_per_ticket"]
 
 
 # PAGES

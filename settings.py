@@ -2,24 +2,35 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name="contest",
+        name="allpay",
         app_sequence=[
             "contest",
         ],
+        csf="allpay",
+        endowment=10,
+        prize=10,
+        cost_per_ticket=1,
+        num_demo_participants=2,
+    ),
+    dict(
+        name="share",
+        app_sequence=[
+            "contest",
+        ],
+        csf="share",
+        endowment=10,
+        prize=10,
+        cost_per_ticket=1,
         num_demo_participants=2,
     ),
     dict(
         name="splash_demo",
-        app_sequence=[
-            "splash"
-        ],
+        app_sequence=["splash"],
         num_demo_participants=3,
     ),
     dict(
         name="quiz_demo",
-        app_sequence=[
-            "quiz"
-        ],
+        app_sequence=["quiz"],
         num_demo_participants=3,
     ),
 ]
