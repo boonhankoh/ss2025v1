@@ -54,6 +54,10 @@ class Player(BasePlayer):
     response_5 = models.IntegerField()
     is_correct = models.BooleanField()
 
+    @property
+    def response_fields(self) -> list[str]:
+        return ["response_1", "response_2", "response_3", "response_4", "response_5"]
+
 
 def creating_session(subsession: Subsession) -> None:
     subsession.setup_round()
@@ -67,6 +71,12 @@ class Intro(Page):
 
 
 class Decision(Page):
+    form_model = "player"
+
+    @staticmethod
+    def get_form_fields(player: Player) -> list[str]:
+        return player.response_fields
+
     @staticmethod
     def is_displayed(player: Player) -> bool:
         return True
