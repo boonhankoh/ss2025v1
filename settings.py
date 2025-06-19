@@ -35,6 +35,13 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
     ),
     dict(
+        name="encryption",
+        app_sequence=[
+            "encryption",
+        ],
+        num_demo_participants=2,
+    ),
+    dict(
         name="splash_demo",
         app_sequence=["splash"],
         num_demo_participants=3,
