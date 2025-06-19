@@ -59,11 +59,24 @@ class Player(BasePlayer):
         return ["response_1", "response_2", "response_3", "response_4", "response_5"]
 
     @property
+    def response_as_list(self) -> list[int]:
+        return [self.response_1, self.response_2, self.response_3, self.response_4,
+                self.response_5]
+
+    @property
     def lookup_dictionary(self) -> dict[str, int]:
         lookup = {}
         for (index, letter) in enumerate(self.lookup_table):
             lookup[letter] = index
         return lookup
+
+    def compute_outcome(self) -> None:
+        self.is_correct = all(
+            response == self.lookup_dictionary[letter]
+            for (response, letter) in zip(self.response_as_list, self.word, strict=True)
+        )
+        if self.is_correct:
+            self.payoff = self.subsession.payment_per_correct
 
 
 def creating_session(subsession: Subsession) -> None:
@@ -87,6 +100,10 @@ class Decision(Page):
     @staticmethod
     def is_displayed(player: Player) -> bool:
         return True
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened: bool) -> None:
+        player.compute_outcome()
 
 
 class Results(Page):
