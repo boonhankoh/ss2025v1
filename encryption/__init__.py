@@ -58,6 +58,13 @@ class Player(BasePlayer):
     def response_fields(self) -> list[str]:
         return ["response_1", "response_2", "response_3", "response_4", "response_5"]
 
+    @property
+    def lookup_dictionary(self) -> dict[str, int]:
+        lookup = {}
+        for (index, letter) in enumerate(self.lookup_table):
+            lookup[letter] = index
+        return lookup
+
 
 def creating_session(subsession: Subsession) -> None:
     subsession.setup_round()
