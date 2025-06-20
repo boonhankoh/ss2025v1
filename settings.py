@@ -48,6 +48,13 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
     ),
     dict(
+        name="summary_test",
+        app_sequence=[
+            "summary",
+        ],
+        num_demo_participants=2,
+    ),
+    dict(
         name="splash_demo",
         app_sequence=["splash"],
         num_demo_participants=3,
@@ -66,7 +73,7 @@ SESSION_CONFIGS = [
 
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00,
-    participation_fee=0.00,
+    participation_fee=5.00,
     doc="",
     num_paid_rounds=2,
     random_regrouping=True,
