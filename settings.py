@@ -39,6 +39,7 @@ SESSION_CONFIGS = [
         app_sequence=[
             "encryption",
         ],
+        encryption_random_seed=12345,
         num_demo_participants=2,
     ),
     dict(
