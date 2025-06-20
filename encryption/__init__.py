@@ -1,5 +1,6 @@
 import random
 import string
+import time
 
 from otree.api import (
     BaseConstants,
@@ -55,6 +56,13 @@ class Player(BasePlayer):
     response_5 = models.IntegerField()
     is_correct = models.BooleanField()
 
+    def start_task(self) -> None:
+        self.time_for_task = C.TIME_FOR_TASK
+        self.started_task_at = time.time()
+
+    def get_remaining_time(self) -> int:
+        return self.in_round(1).time_for_task - (time.time() - self.in_round(1).started_task_at)
+
     @property
     def response_fields(self) -> list[str]:
         return ["response_1", "response_2", "response_3", "response_4", "response_5"]
@@ -95,6 +103,10 @@ class Intro(Page):
     def is_displayed(player: Player) -> bool:
         return player.round_number == 1
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened: bool) -> None:
+        player.start_task()
+
 
 class Decision(Page):
     form_model = "player"
@@ -105,7 +117,7 @@ class Decision(Page):
 
     @staticmethod
     def get_timeout_seconds(player: Player) -> int:
-        return C.TIME_FOR_TASK
+        return player.get_remaining_time()
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened: bool) -> None:
