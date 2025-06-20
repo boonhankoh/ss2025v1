@@ -3,7 +3,23 @@
 {{ endblock }}
 {{ block content }}
 
-Lookup table: {{ player.lookup_dictionary }}
+<table class="table">
+    <thead>
+        <tr class="text-center fw-bold">
+            {{ for letter in player.lookup_dictionary.keys }}
+                <td>{{ letter }}</td>
+            {{ endfor }}
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="text-center">
+            {{ for letter in player.lookup_dictionary.values }}
+                <td>{{ letter }}</td>
+            {{ endfor }}
+        </tr>
+    </tbody>
+</table>
+
 <br/>
 Word: {{ player.word }}
 

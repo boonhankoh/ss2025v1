@@ -80,8 +80,8 @@ class Player(BasePlayer):
     @property
     def lookup_dictionary(self) -> dict[str, int]:
         lookup = {}
-        for (index, letter) in enumerate(self.lookup_table):
-            lookup[letter] = index
+        for letter in string.ascii_uppercase:
+            lookup[letter] = self.lookup_table.index(letter)
         return lookup
 
     def compute_outcome(self, timeout_happened: bool) -> None:
