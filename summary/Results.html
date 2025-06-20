@@ -4,20 +4,31 @@
 
 {{ block content }}
 
-<p>
-    Your earnings from Part 1: {{ player.payoff_contest }}.
-</p>
-
-<p>
-    Your earnings from Part 2: {{ player.payoff_encryption }}.
-</p>
-
-<p>
-    Participation payment: {{ session.config.participation_fee }}.
-</p>
-
-<p>
-    Total earnings: {{ participant.payoff_plus_participation_fee }}.
-</p>
+<table class="table">
+    <thead>
+        <tr class="table-dark">
+            <th>Component</th>
+            <th class="text-center">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Your earnings from Part 1</td>
+            <td class="text-center">{{ player.payoff_contest }}</td>
+        </tr>
+        <tr>
+            <td>Your earnings from Part 2</td>
+            <td class="text-center">{{ player.payoff_encryption }}</td>
+        </tr>
+        <tr class="table-info">
+            <td>Your participation payment</td>
+            <td class="text-center">{{ session.config.participation_fee }}</td>
+        </tr>
+        <tr class="table-success fw-bold">
+            <td>Your total earnings</td>
+            <td class="text-center">{{ participant.payoff_plus_participation_fee }}</td>
+        </tr>
+    </tbody>
+</table>
 
 {{ endblock }}
