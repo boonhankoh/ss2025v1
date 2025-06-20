@@ -57,7 +57,7 @@ class Player(BasePlayer):
     is_correct = models.BooleanField()
 
     def start_task(self) -> None:
-        self.time_for_task = C.TIME_FOR_TASK
+        self.time_for_task = self.session.config.get("time_for_encryption_task", C.TIME_FOR_TASK)
         self.started_task_at = time.time()
 
     def get_remaining_time(self) -> int:
