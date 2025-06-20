@@ -40,6 +40,11 @@ SESSION_CONFIGS = [
             "encryption",
         ],
         encryption_random_seed=12345,
+        lookup_tables=[
+            "ZYXJIUTLKQSRNWVHGFEDMOPCBA",
+            "ZYXWVUTSRQPONMLKJIHGFEDCBA",
+            "BADCFEHGJILKNMPORQTSVUXWZY",
+        ],
         num_demo_participants=2,
     ),
     dict(

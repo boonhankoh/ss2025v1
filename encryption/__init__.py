@@ -23,11 +23,6 @@ class C(BaseConstants):
     NUM_ROUNDS = 2
     PAYMENT_PER_CORRECT = Currency(0.10)
     TIME_FOR_TASK = 20
-    LOOKUP_TABLES = [
-        "ZYXJIUTLKQSRNWVHGFEDMOPCBA",
-        "ZYXWVUTSRQPONMLKJIHGFEDCBA",
-        "BADCFEHGJILKNMPORQTSVUXWZY",
-    ]
 
 
 class Subsession(BaseSubsession):
@@ -39,7 +34,11 @@ class Subsession(BaseSubsession):
             self.random_seed = self.session.config["encryption_random_seed"]
             random.seed(self.random_seed)
         self.payment_per_correct = C.PAYMENT_PER_CORRECT
-        lookup_table = random.choice(C.LOOKUP_TABLES)
+        try:
+            lookup_table = random.choice(self.session.config["lookup_tables"])
+        except KeyError:
+            # If lookup tables are not provided, generate permutation randomly
+            lookup_table = "".join(random.sample(string.ascii_uppercase, 26))
         word = "".join(random.choices(string.ascii_uppercase, k=5))
         for player in self.get_players():
             player.word = word
