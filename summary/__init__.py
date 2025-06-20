@@ -35,8 +35,8 @@ class Player(BasePlayer):
     payoff_encryption = models.CurrencyField()
 
     def collect_results(self) -> None:
-        self.payoff_contest = Currency(1)
-        self.payoff_encryption = Currency(2)
+        self.payoff_contest = self.participant.vars.get("payoff_contest", Currency(0))
+        self.payoff_encryption = self.participant.vars.get("payoff_encryption", Currency(0))
 
 
 # PAGES

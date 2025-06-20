@@ -111,6 +111,9 @@ class Player(BasePlayer):
         self.endowment = self.session.config["endowment"]
         self.cost_per_ticket = self.session.config["cost_per_ticket"]
 
+    def record_payoff(self) -> None:
+        self.participant.vars["payoff_contest"] = sum(p.earnings for p in self.paid_rounds)
+
 
 # PAGES
 class Intro(Page):
@@ -160,6 +163,10 @@ class EndBlock(Page):
     @staticmethod
     def is_displayed(player: Player) -> bool:
         return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened: bool) -> None:
+        player.record_payoff()
 
 
 page_sequence = [

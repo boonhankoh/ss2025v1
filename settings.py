@@ -50,8 +50,14 @@ SESSION_CONFIGS = [
     dict(
         name="summary_test",
         app_sequence=[
+            "contest",
+            "encryption",
             "summary",
         ],
+        csf="share",
+        endowment=10,
+        prize=10,
+        cost_per_ticket=1,
         num_demo_participants=2,
     ),
     dict(

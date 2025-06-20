@@ -97,6 +97,9 @@ class Player(BasePlayer):
         if self.is_correct:
             self.payoff = self.subsession.payment_per_correct
 
+    def record_payoff(self) -> None:
+        self.participant.vars["payoff_encryption"] = sum(self.payoff for p in self.in_all_rounds())
+
 
 def creating_session(subsession: Subsession) -> None:
     subsession.setup_round()
@@ -133,6 +136,10 @@ class Results(Page):
     @staticmethod
     def is_displayed(player: Player) -> bool:
         return player.round_number == C.NUM_ROUNDS
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened: bool) -> None:
+        player.record_payoff()
 
 
 page_sequence = [
