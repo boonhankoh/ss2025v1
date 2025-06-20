@@ -1,8 +1,17 @@
 {{ block title }}
     Decision
 {{ endblock }}
-{{ block content }}
 
+{{ block styles }}
+<style>
+.word {
+    color: dodgerblue;
+    font-size: 2.5rem;
+}
+</style>
+{{ endblock }}
+
+{{ block content }}
 <table class="table">
     <thead>
         <tr class="text-center fw-bold">
@@ -20,8 +29,11 @@
     </tbody>
 </table>
 
-<br/>
-Word: {{ player.word }}
+<div class="row">
+    <div class="col-12 text-center word">
+        {{ player.word }}
+    </div>
+</div>
 
     {{ formfields }}
     {{ next_button }}
