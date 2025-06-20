@@ -7,6 +7,7 @@
 .word {
     color: dodgerblue;
     font-size: 2.5rem;
+    font-family: "Comic Sans MS", serif;
 }
 </style>
 {{ endblock }}
@@ -35,7 +36,14 @@
     </div>
 </div>
 
-    {{ formfields }}
+<div class="row controls justify-content-center">
+    {{ for field in player.response_fields }}
+    <div class="col-1">
+        <input type="number" class="form-control" inputmode="numeric" id="id_{{ field }}" min="0" name="{{ field }}" required value="">
+    </div>
+    {{ endfor }}
+</div>
+
     {{ next_button }}
 
 {{ endblock }}
