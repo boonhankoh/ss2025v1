@@ -21,6 +21,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 2
     PAYMENT_PER_CORRECT = Currency(0.10)
+    TIME_FOR_TASK = 20
     LOOKUP_TABLES = [
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     ]
@@ -70,11 +71,16 @@ class Player(BasePlayer):
             lookup[letter] = index
         return lookup
 
-    def compute_outcome(self) -> None:
-        self.is_correct = all(
-            response == self.lookup_dictionary[letter]
-            for (response, letter) in zip(self.response_as_list, self.word, strict=True)
-        )
+    def compute_outcome(self, timeout_happened: bool) -> None:
+        if timeout_happened:
+            for response in self.response_fields:
+                setattr(self, response, None)
+            self.is_correct = False
+        else:
+            self.is_correct = all(
+                response == self.lookup_dictionary[letter]
+                for (response, letter) in zip(self.response_as_list, self.word, strict=True)
+            )
         if self.is_correct:
             self.payoff = self.subsession.payment_per_correct
 
@@ -98,12 +104,12 @@ class Decision(Page):
         return player.response_fields
 
     @staticmethod
-    def is_displayed(player: Player) -> bool:
-        return True
+    def get_timeout_seconds(player: Player) -> int:
+        return C.TIME_FOR_TASK
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened: bool) -> None:
-        player.compute_outcome()
+        player.compute_outcome(timeout_happened)
 
 
 class Results(Page):
