@@ -1,16 +1,27 @@
 {{ block title }}
-    Results
+     Round {{ player.round_number }} results
 {{ endblock }}
+
 {{ block content }}
+<ul>
+    <li>You purchased <span class="fw-bold">{{ player.tickets_purchased }}</span> tickets.</li>
+    <li>The other player purchased <span class="fw-bold">{{ player.coplayer.tickets_purchased }}</span> tickets.</li>
+    {{ if subsession.csf == "share" }}
+    <li>Your share of the prize is <span class="fw-bold">{{ player.prize_won|to2 }}</span>.</li>
+    {{ elif player.prize_won > 0 and player.prize_won < 1 }}
+    <li>There was a tie and you received a share <span class="fw-bold">{{ player.prize_won|to2 }}</span> of the prize.</li>
+    {{ elif player.prize_won == 1 }}
+    <li>You received the prize.</li>
+    {{ else }}
+    <li>You did not receive the prize.</li>
+    {{ endif }}
+    <li>Your earnings for the round are therefore <span class="fw-bold">{{ player.earnings }}</span>.</li>
+</ul>
 
-    You purchased {{ player.tickets_purchased }} tickets.
-
-    The other player purchased {{ player.coplayer.tickets_purchased }} tickets.
-
-    Your share of the prize is {{ player.prize_won }}.
-
-    Your earnings for the round are {{ player.earnings }}.
-
-    {{ next_button }}
+<div class="row justify-content-center p-3">
+    <div class="col-4">
+        <button class="otree-btn-next btn btn-primary w-100">Continue</button>
+    </div>
+</div>
 
 {{ endblock }}

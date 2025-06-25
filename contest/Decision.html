@@ -1,15 +1,36 @@
 {{ block title }}
-    Decision
+    Round {{ player.round_number }} decision
 {{ endblock }}
+
 {{ block content }}
+<p class="text-center">
+    The value of the prize is <span class="fw-bold">{{ group.prize }}</span>.
+</p>
+<p class="text-center">
+    Each ticket costs <span class="fw-bold">{{ player.cost_per_ticket }}</span>.
+</p>
+<p class="text-center">
+    Your endowment is <span class="fw-bold">{{ player.endowment }}</span>.
+</p>
 
-Your endowment is {{ player.endowment }}.
+<div class="card">
+    <div class="card-header text-center">
+        How many tickets would you like to purchase?
+    </div>
+    <div class="card-body">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <input type="number" class="form-control" inputmode="numeric" id="id_tickets_purchased"
+                       min="0" name="tickets_purchased" required value="">
+            </div>
+        </div>
+    </div>
+</div>
 
-Each ticket costs {{ player.cost_per_ticket }}.
-
-The value of the prize is {{ group.prize }}.
-
-    {{ formfields }}
-    {{ next_button }}
+<div class="row justify-content-center p-3">
+    <div class="col-4">
+        <button class="otree-btn-next btn btn-primary w-100">Confirm</button>
+    </div>
+</div>
 
 {{ endblock }}

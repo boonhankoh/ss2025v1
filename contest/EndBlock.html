@@ -3,19 +3,40 @@
 {{ endblock }}
 {{ block content }}
 
-<p>
-    Here are your results from the paid rounds:
+<p class="text-center">
+    Here are the results from the rounds which have been selected to be for real.
 </p>
 
-{{ for rd in player.paid_rounds }}
-    <p>
-        {{ rd.round_number }}: Purchased {{ rd.tickets_purchased }} tickets, won {{ rd.prize_won }}, earnings {{ rd.payoff }}.
-    </p>
-{{ endfor }}
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th>Round</th>
+            <th>Tickets purchased</th>
+            <th>Prize won</th>
+            <th>Earnings</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ for rd in player.paid_rounds }}
+            <tr class="text-center">
+                <td>{{ rd.round_number }}</td>
+                <td>{{ rd.tickets_purchased }}</td>
+                <td>{{ rd.prize_won }}</td>
+                <td>{{ rd.earnings }}</td>
+            </tr>
+        {{ endfor }}
+    </tbody>
+</table>
 
-<p>
-    Your total earnings for the experiment so far are {{ player.participant.payoff }}.
+
+<p class="text-center">
+    Your total earnings this block are therefore <span class="fw-bold">{{ player.total_earnings }}</span>.
 </p>
-    {{ next_button }}
+
+<div class="row justify-content-center p-3">
+    <div class="col-4">
+        <button class="otree-btn-next btn btn-primary w-100">Continue</button>
+    </div>
+</div>
 
 {{ endblock }}

@@ -5,6 +5,7 @@ from otree.api import (
     BaseGroup,
     BasePlayer,
     BaseSubsession,
+    Currency,
     Page,
     WaitPage,
     models,
@@ -106,6 +107,10 @@ class Player(BasePlayer):
     @property
     def paid_rounds(self) -> list["Player"]:
         return [r for r in self.in_all_rounds() if r.subsession.is_paid]
+
+    @property
+    def total_earnings(self) -> Currency:
+        return sum(r.earnings for r in self.paid_rounds)
 
     def setup_round(self) -> None:
         self.endowment = self.session.config["endowment"]
